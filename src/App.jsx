@@ -15,7 +15,6 @@ import {
     getDoc,
     setDoc,
     collection,
-    addDoc,
     query,
     where,
     getDocs,
@@ -23,8 +22,7 @@ import {
     arrayUnion,
     arrayRemove,
     deleteDoc,
-    onSnapshot,
-    writeBatch
+    onSnapshot
 } from 'firebase/firestore';
 import { Users, LogOut, Mail, KeyRound, Plus, ArrowLeft, Calendar, Copy, Check, Trash2, X, Printer, Sun, Star, PartyPopper, UserPlus, BookOpen, Share2 } from 'lucide-react';
 
@@ -312,7 +310,10 @@ const Dashboard = ({ schedules, setView, user, userData, db, handleViewSchedule 
 
     const handleCreateSchedule = async (kidName) => {
         try {
-            const newScheduleRef = await addDoc(collection(db, "schedules"), {
+            const newScheduleId = Math.random().toString(36).substring(2, 8).toUpperCase();
+            const newScheduleRef = doc(db, "schedules", newScheduleId);
+
+            await setDoc(newScheduleRef, {
                 kidName: kidName,
                 ownerId: user.uid,
                 collaborators: [],
